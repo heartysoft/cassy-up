@@ -15,6 +15,9 @@ sed -i "s/rpc_address:.*/rpc_address: $CASSANDRA_RPC_ADDRESS/g" $C/cassandra.yam
 sed -i "s/authenticator:.*/authenticator: $CASSANDRA_AUTHENTICATOR/g" $C/cassandra.yaml
 sed -i "s/authorizer:.*/authorizer: $CASSANDRA_AUTHORIZER/g" $C/cassandra.yaml
 
+sed -i "s/# data_file_directories:.*/data_file_directories:/g" $C/cassandra.yaml
+sed -i 's/#\s*- \/var\/lib\/cassandra\/data.*/     - \/var\/lib\/cassandra\/data/g' $C/cassandra.yaml
+sed -i 's/# commitlog_directory:.*/commitlog_directory: \/var\/lib\/cassandra\/commitlog/g' $C/cassandra.yaml
 
 
 # cassandra-rackdc.properties
@@ -31,6 +34,4 @@ then
         sed -i "s/rack=.*/#rack=rack1/g" $C/cassandra-rackdc.properties
         sed -i "s/#dc_suffix=.*/dc_suffix=$CASSANDRA_DC_SUFFIX/g" $C/cassandra-rackdc.properties
 fi
-
-
 
