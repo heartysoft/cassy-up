@@ -28,7 +28,7 @@ Vagrant.configure(2) do |config|
       
             # Use VBoxManage to customize the VM. For example to change memory:
             vb.customize ["modifyvm", :id, "--memory", "2048"]
-            config.vm.provision "shell", path: "main.sh"
+            config.vm.provision "shell", path: "main.sh", env: {'VAGRANT'=> 1}
         end
     end
   end

@@ -1,0 +1,59 @@
+#!/bin/bash
+#
+# chkconfig: - 80 45
+# description: Starts and stops Cassandra
+# update deamon path to point to the cassandra executable
+
+DAEMON=/opt/apache-cassandra/bin/cassandra
+
+start() {
+        echo -n "Starting Cassandra... "
+        ulimit -l unlimited &&
+        ulimit -n 100000 &&
+        ulimit -u 32768 &&
+        ulimit -v unlimited &&
+        sysctl -q -w vm.max_map_count=131072 &&
+        swapoff --all &&
+        $DAEMON -p /var/run/cassandra.pid &&
+        echo "OK" &&
+        return 0
+}
+
+stop() {
+        echo -n "Stopping Cassandra... "
+        kill $(cat /var/run/cassandra.pid)
+        echo "OK"
+        return 0
+}
+
+status() {
+  if ps auwx | grep "[j]ava" | grep "[c]assandra" > /dev/null
+  then
+    echo "Cassandra is running."
+    exit 0
+  else
+    echo "Cassandra is stopped."
+    exit 1
+  fi
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status
+        ;;
+  restart)
+        stop
+        start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|status|restart}"
+        exit 1
+esac
+
+exit $?
