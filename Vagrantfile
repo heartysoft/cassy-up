@@ -36,7 +36,7 @@ Vagrant.configure(2) do |config|
   (1..kafka_nodes).each do |i|
     config.vm.define "kafka-#{i}" do |c|
 
-        c.vm.provision "shell", path: "kafka.sh", env: {'VAGRANT'=> 1, 'HOSTS' => host_ips, 'ZOOKEEPER_MY_ID' => i}
+        c.vm.provision "shell", path: "zookeeper.sh", env: {'VAGRANT'=> 1, 'HOSTS' => host_ips, 'ZOOKEEPER_MY_ID' => i}
         c.vm.provider "virtualbox" do |vb|
             vb.memory = 1024
             vb.cpus = 2

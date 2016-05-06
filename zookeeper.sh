@@ -4,5 +4,3 @@ export SCRIPT_ROOT="/vagrant"
 
 source $SCRIPT_ROOT/apache-zookeeper/zookeeper-vagrant-params.sh
 (cd $SCRIPT_ROOT/apache-zookeeper && ./main.sh)
-
-echo "$HOSTS" > /var/foo

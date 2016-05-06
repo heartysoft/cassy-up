@@ -17,7 +17,6 @@ do
     echo "server.$((index+1))=${HOSTSARR[index]}:2888:3888" >> $ZOOKEEPER_DIR/conf/zoo.cfg
 done
 
-echo "ZOO_"
 sed -i "1iZOO_LOG_DIR=$ZOOKEEPER_LOG_DIR" $ZOOKEEPER_DIR/bin/zkEnv.sh
 
 echo $ZOOKEEPER_MY_ID >> $ZOOKEEPER_DATA_DIR/myid
