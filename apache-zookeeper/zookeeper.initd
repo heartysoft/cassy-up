@@ -1,0 +1,55 @@
+
+# description: Starts and stops zookeeper
+# update deamon path to point to the zookeeper executable
+
+DAEMON=/opt/zookeeper/bin/zkServer.sh
+DAEMON_ARGS=""
+
+start() {
+        echo -n "Starting Zookeeper... "
+#        start-stop-daemon --start --quiet --chuid zookeeper --exec $DAEMON --test > /dev/null \
+#		|| return 1
+		start-stop-daemon --start --quiet --chuid zookeeper --exec $DAEMON start -- \
+		|| return 2
+        echo "OK" &&
+        return 0
+}
+
+stop() {
+	echo -n "Stopping Zookeeper... "
+    kill `ps aux | grep java | grep zookeeper | awk '{print $2}'`
+    echo "OK"
+    return 0
+}
+
+status() {
+  if ps auwx | grep "[j]ava" | grep "[z]ookeeper" > /dev/null
+  then
+    echo "Zookeeper is running."
+    exit 0
+  else
+    echo "Zookeeper is stopped."
+    exit 1
+  fi
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status
+        ;;
+  restart)
+        stop
+        start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|status|restart}"
+        exit 1
+esac
+
+exit $?

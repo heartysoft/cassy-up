@@ -28,21 +28,24 @@ Vagrant.configure(2) do |config|
 
   #zookeeper + kafka (3 nodes)
   kafka_nodes = 2
-  hostnames = (1..kafka_nodes).map {|i| "kafka-#{i}"}.join(',')
+  kafka_base_ip = "192.168.70.1"
+  #hostnames = (1..kafka_nodes).map {|i| "kafka-#{i}"}.join(',')
+  host_ips = (1..kafka_nodes).map {|i| "#{kafka_base_ip}#{i}"}.join(',')
+  
+  
+  (1..kafka_nodes).each do |i|
+    config.vm.define "kafka-#{i}" do |c|
 
-  kafka_nodes.times do |i|
-    config.vm.define "kafka-#{i+1}" do |c|
-        c.vm.provision "shell", path: "kafka.sh", env: {'VAGRANT'=> 1, 'HOSTS' => hostnames}
-
+        c.vm.provision "shell", path: "kafka.sh", env: {'VAGRANT'=> 1, 'HOSTS' => host_ips, 'ZOOKEEPER_MY_ID' => i}
         c.vm.provider "virtualbox" do |vb|
-          vb.memory = 1024
-          vb.cpus = 2
+            vb.memory = 1024
+            vb.cpus = 2
         end
 
-        c.vm.hostname = "kafka-#{i+1}"
-        c.vm.network "private_network", ip: "192.168.70.1#{i+1}"
+        c.vm.hostname = "kafka-#{i}"
+        c.vm.network "private_network", ip: "#{kafka_base_ip}#{i}"
 
-        c.vm.network "forwarded_port", guest: 2181, host: (2180 + i)
+        c.vm.network "forwarded_port", guest: 2181, host: (2179 + i)
         #c.vm.network "forwarded_port", guest: 8081, host: (8180 + i)
         #c.vm.network "forwarded_port", guest: 9042, host: (9140 + i)
     end
