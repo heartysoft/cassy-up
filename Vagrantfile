@@ -27,7 +27,7 @@ Vagrant.configure(2) do |config|
   # end
 
   #zookeeper + kafka (3 nodes)
-  zookeeper_nodes = 2
+  zookeeper_nodes = 3
   zookeeper_base_ip = "192.168.70.1"
   zookeeper_host_ips = (1..zookeeper_nodes).map {|i| "#{zookeeper_base_ip}#{i}"}.join(',')
   
@@ -45,7 +45,8 @@ Vagrant.configure(2) do |config|
   #       c.vm.hostname = "zookeeper-#{i}"
   #       c.vm.network "private_network", ip: "#{zookeeper_base_ip}#{i}"
 
-  #       c.vm.network "forwarded_port", guest: 2181, host: (2179 + i)
+  #       c.vm.network "forwarded_port", guest: 2181, host: (2180 + i)
+  #       c.vm.network "forwarded_port", guest: 3181, host: (3180 + i)
   #       #c.vm.network "forwarded_port", guest: 8081, host: (8180 + i)
   #       #c.vm.network "forwarded_port", guest: 9042, host: (9140 + i)
   #   end

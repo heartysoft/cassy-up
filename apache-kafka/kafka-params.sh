@@ -9,6 +9,7 @@ if [ "x$KAFKA_DATA_DIR" == "x" ]; then export KAFKA_DATA_DIR=/var/lib/kafka; fi
 if [ "x$KAFKA_LOG_DIR" == "x" ]; then export KAFKA_LOG_DIR=/var/lib/kafka; fi
 if [ "x$KAFKA_LOG4J_DIR" == "x" ]; then export KAFKA_LOG4J_DIR=/var/log/kafka; fi
 if [ "x$KAFKA_HEAP_OPTS" == "x" ]; then export KAFKA_HEAP_OPTS="-Xmx2G -Xms2G"; fi
+if [ "x$KAFKA_ADVERTISED_HOST_NAME" == "x" ]; then export KAFKA_ADVERTISED_HOST_NAME="`hostname`"; fi
 
 export KAFKA_DIR=$KAFKA_ROOT_DIR/kafka
 export KAFKA_INSTALL_DIR=$KAFKA_ROOT_DIR/kafka_$SCALA_VERSION-$KAFKA_VERSION
