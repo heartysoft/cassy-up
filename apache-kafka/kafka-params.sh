@@ -6,7 +6,9 @@ if [ "x$KAFKA_URL" == "x" ]; then export KAFKA_URL=https://www.apache.org/dist/k
 if [ "x$KAFKA_DOWNLOAD_DIR" == "x" ]; then export KAFKA_DOWNLOAD_DIR=/usr/local/downloads/kafka/kafka-$KAFKA_VERSION; fi
 if [ "x$KAFKA_ROOT_DIR" == "x" ]; then export KAFKA_ROOT_DIR=/opt; fi
 if [ "x$KAFKA_DATA_DIR" == "x" ]; then export KAFKA_DATA_DIR=/var/lib/kafka; fi
-if [ "x$KAFKA_LOG_DIR" == "x" ]; then export KAFKA_LOG_DIR=/var/log/kafka; fi
+if [ "x$KAFKA_LOG_DIR" == "x" ]; then export KAFKA_LOG_DIR=/var/lib/kafka; fi
+if [ "x$KAFKA_LOG4J_DIR" == "x" ]; then export KAFKA_LOG4J_DIR=/var/log/kafka; fi
+if [ "x$KAFKA_HEAP_OPTS" == "x" ]; then export KAFKA_HEAP_OPTS="-Xmx2G -Xms2G"; fi
 
 export KAFKA_DIR=$KAFKA_ROOT_DIR/kafka
 export KAFKA_INSTALL_DIR=$KAFKA_ROOT_DIR/kafka_$SCALA_VERSION-$KAFKA_VERSION
