@@ -1,0 +1,56 @@
+#! /bin/bash
+
+# description: Starts and stops kafka
+# update deamon path to point to the kafka executable
+
+source /etc/profile.d/kafka.sh
+
+DAEMON="/opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties"
+DAEMON_ARGS=""
+
+start() {
+  echo -n "Starting Kafka... "
+	start-stop-daemon --start --quiet --background --chuid kafka --exec $DAEMON -- \
+	|| return 2
+  echo "OK" &&
+  return 0
+}
+
+stop() {
+	echo -n "Stopping Kafka... "
+  kill `ps aux | grep java | grep kafka | awk '{print $2}'`
+  echo "OK"
+  return 0
+}
+
+status() {
+  if ps auwx | grep "[j]ava" | grep "[k]afka" > /dev/null
+  then
+    echo "Kafka is running."
+    exit 0
+  else
+    echo "Kafka is stopped."
+    exit 1
+  fi
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status
+        ;;
+  restart)
+        stop
+        start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|status|restart}"
+        exit 1
+esac
+
+exit $?
