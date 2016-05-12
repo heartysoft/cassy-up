@@ -1,2 +1,2 @@
-./oracle-java-jdk.sh
+./oracle-java-jdk-ubuntu.sh
 

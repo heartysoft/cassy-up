@@ -11,7 +11,7 @@ echo "clientPort=2181" >> $ZOOKEEPER_DIR/conf/zoo.cfg
 echo "initLimit=5" >> $ZOOKEEPER_DIR/conf/zoo.cfg
 echo "syncLimit=2" >> $ZOOKEEPER_DIR/conf/zoo.cfg
 
-IFS=',' read -r -a HOSTSARR <<< "$HOSTS"
+IFS=',' read -r -a HOSTSARR <<< "$ZOOKEEPER_SERVERS"
 for index in "${!HOSTSARR[@]}"
 do
     echo "server.$((index+1))=${HOSTSARR[index]}:2888:3888" >> $ZOOKEEPER_DIR/conf/zoo.cfg

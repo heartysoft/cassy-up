@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 # description: Starts and stops kafka
 # update deamon path to point to the kafka executable

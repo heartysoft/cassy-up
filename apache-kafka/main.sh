@@ -1,3 +1,5 @@
+#!/bin/bash
+
 source ./kafka-params.sh
 
 ./kafka-get-files.sh

@@ -1,3 +1,4 @@
+#!/bin/bash
 source ./zookeeper-params.sh
 
 ./zookeeper-get-files.sh
