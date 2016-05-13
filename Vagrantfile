@@ -59,7 +59,7 @@ Vagrant.configure(2) do |config|
   (1..kafka_nodes).each do |i|
     config.vm.define "kafka-#{i}" do |c|
         c.vm.provision "shell", path: "environments/vagrant/oracle-jdk.sh"
-        c.vm.provision "shell", path: "environments/vagrant/kafka.sh", env: {'KAFKA_ZOOKEEPER_SERVERS' => zookeeper_host_ips, 'KAFKA_BROKER_NAME' => i}
+        c.vm.provision "shell", path: "environments/vagrant/kafka.sh", env: {'KAFKA_ZOOKEEPER_SERVERS' => zookeeper_host_ips, 'KAFKA_BROKER_ID' => i}
 
         c.vm.provider "virtualbox" do |vb|
             vb.memory = 1024
