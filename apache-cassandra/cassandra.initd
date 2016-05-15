@@ -1,59 +1,135 @@
-#!/bin/bash
+#! /bin/bash
+
+### BEGIN INIT INFO
+# Short-Description: cassandra
+# Description: cassandra
+### END INIT INFO
+
+# Author: Ashic Mahtab <ashic@heartysoft.com>
 #
-# chkconfig: - 80 45
-# description: Starts and stops Cassandra
-# update deamon path to point to the cassandra executable
+# Do NOT "set -e"
 
-DAEMON=/opt/apache-cassandra/bin/cassandra
+# PATH should only include /usr/* if it runs after the mountnfs.sh script
+DESC="apache cassandra"
+NAME=cassandra
+DAEMON=/opt/cassandra/bin/$NAME
+DAEMON_ARGS=""
+SCRIPTNAME=/etc/init.d/$NAME
+CASSANDRA_USER=cassandra
 
-start() {
-        echo -n "Starting Cassandra... "
-        ulimit -l unlimited &&
-        ulimit -n 100000 &&
-        ulimit -u 32768 &&
-        ulimit -v unlimited &&
-        sysctl -q -w vm.max_map_count=131072 &&
-        swapoff --all &&
-        $DAEMON -p /var/run/cassandra.pid &&
-        echo "OK" &&
-        return 0
+# Exit if the package is not installed
+[ -x "$DAEMON" ] || exit 0
+
+# Read configuration variable file if it is present
+source /etc/profile.d/cassandra.sh
+
+# Load the VERBOSE setting and other rcS variables
+source /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.2-14) to ensure that this file is present
+# and status_of_proc is working.
+source /lib/lsb/init-functions
+
+#
+# Function that starts the daemon/service
+#
+do_start()
+{
+    echo -n "Starting Cassandra..."
+    ulimit -l unlimited &&
+    ulimit -n 100000 &&
+    ulimit -u 32768 &&
+    ulimit -v unlimited &&
+    sysctl -q -w vm.max_map_count=131072 &&
+    swapoff --all &&
+	# Return
+	#   0 if daemon has been started
+	#   1 if daemon was already running
+	#   2 if daemon could not be started
+	# start-stop-daemon --start --chuid cassandra --exec $DAEMON --test > /dev/null \
+	# 	|| return 1
+	start-stop-daemon --quiet --start --chuid cassandra --exec $DAEMON -- \
+		$DAEMON_ARGS \
+		|| return 2
+	# Add code here, if necessary, that waits for the process to be ready
+	# to handle requests from services started subsequently which depend
+	# on this one.  As a last resort, sleep for some time.
+    echo "Ok"
 }
 
-stop() {
+#
+# Function that stops the daemon/service
+#
+do_stop()
+{
         echo -n "Stopping Cassandra... "
-        kill $(cat /var/run/cassandra.pid)
+        kill `ps aux | grep java | grep cassandra | awk '{print $2}'`
         echo "OK"
         return 0
 }
 
-status() {
-  if ps auwx | grep "[j]ava" | grep "[c]assandra" > /dev/null
-  then
-    echo "Cassandra is running."
-    exit 0
-  else
-    echo "Cassandra is stopped."
-    exit 1
-  fi
-}
-
 case "$1" in
   start)
-        start
-        ;;
+	[ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
+	do_start
+	case "$?" in
+		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+	esac
+	;;
   stop)
-        stop
-        ;;
+	[ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
+	do_stop
+	case "$?" in
+		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+	esac
+	;;
   status)
-        status
-        ;;
-  restart)
-        stop
-        start
-        ;;
-  *)
-        echo $"Usage: $0 {start|stop|status|restart}"
+    if ps auwx | grep "[j]ava" | grep "[c]assandra" > /dev/null
+    then
+        echo "Cassandra is running."
+        exit 0
+    else
+        echo "Cassandra is stopped."
         exit 1
+    fi
+	;;
+  #reload|force-reload)
+	#
+	# If do_reload() is not implemented then leave this commented out
+	# and leave 'force-reload' as an alias for 'restart'.
+	#
+	#log_daemon_msg "Reloading $DESC" "$NAME"
+	#do_reload
+	#log_end_msg $?
+	#;;
+  restart|force-reload)
+	#
+	# If the "reload" option is implemented then remove the
+	# 'force-reload' alias
+	#
+	log_daemon_msg "Restarting $DESC" "$NAME"
+	do_stop
+	case "$?" in
+	  0|1)
+		do_start
+		case "$?" in
+			0) log_end_msg 0 ;;
+			1) log_end_msg 1 ;; # Old process is still running
+			*) log_end_msg 1 ;; # Failed to start
+		esac
+		;;
+	  *)
+		# Failed to stop
+		log_end_msg 1
+		;;
+	esac
+	;;
+  *)
+	#echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
+	echo "Usage: $SCRIPTNAME {start|stop|status|restart|force-reload}" >&2
+	exit 3
+	;;
 esac
-
-exit $?

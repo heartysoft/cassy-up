@@ -45,6 +45,7 @@ then
 fi
 
 touch /etc/profile.d/cassandra.sh
-printf '%s\n%s\n' "export CASSANDRA_HOME=$CASSANDRA_DIR/" 'export PATH=$PATH:$CASSANDRA_HOME/bin/:$CASSANDRA_HOME/tools/bin/\n' >> /etc/profile.d/cassandra.sh
-printf '%s\n' "source /etc/profile.d/cassandra.sh" >> /etc/bash.bashrc
+echo "export CASSANDRA_HOME=$CASSANDRA_DIR" >> /etc/profile.d/cassandra.sh 
+echo 'export PATH=$PATH:$CASSANDRA_HOME/bin/:$CASSANDRA_HOME/tools/bin' >> /etc/profile.d/cassandra.sh
+echo "source /etc/profile.d/cassandra.sh" >> /etc/bash.bashrc
 
