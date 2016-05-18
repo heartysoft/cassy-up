@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# description: Starts and stops flink
+# update deamon path to point to the flink executable
+
+source /etc/profile.d/flink.sh
+
+if [ "$FLINK_IS_MASTER" == "false" ]; then
+  DAEMON=/opt/flink/bin/taskmanager.sh #slave
+  DAEMON_ARGS=start
+else
+  DAEMON=/opt/flink/bin/jobmanager.sh #master
+  DAEMON_ARGS="start cluster"
+fi
+
+start() {
+    echo -n "Starting Flink... "
+
+		start-stop-daemon --start --quiet --chuid flink --exec $DAEMON $DAEMON_ARGS -- \
+		  || return 2
+      echo "OK" &&
+      return 0
+}
+
+stop() {
+	echo -n "Stopping Flink... "
+    $DAEMON stop
+    echo "OK"
+    return 0
+}
+
+status() {
+  if ps auwx | grep "[j]ava" | grep "[f]link" > /dev/null
+  then
+    echo "Flink is running."
+    exit 0
+  else
+    echo "Flink is stopped."
+    exit 1
+  fi
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status
+        ;;
+  restart)
+        stop
+        start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|status|restart}"
+        exit 1
+esac
+
+exit $?

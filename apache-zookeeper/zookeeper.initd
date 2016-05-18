@@ -3,7 +3,6 @@
 # update deamon path to point to the zookeeper executable
 
 DAEMON=/opt/zookeeper/bin/zkServer.sh
-DAEMON_ARGS=""
 
 start() {
         echo -n "Starting Zookeeper... "
