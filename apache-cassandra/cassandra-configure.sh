@@ -12,6 +12,7 @@ sed -i "s/listen_address:.*/listen_address: $CASSANDRA_LISTEN_ADDRESS/g" $C/cass
 sed -i "s/# broadcast_address:.*/broadcast_address: $CASSANDRA_BROADCAST_ADDRESS/g" $C/cassandra.yaml
 sed -i "s/rpc_address:.*/rpc_address: $CASSANDRA_RPC_ADDRESS/g" $C/cassandra.yaml
 sed -i "s/# broadcast_rpc_address:.*/broadcast_rpc_address: $CASSANDRA_BROADCAST_RPC_ADDRESS/g" $C/cassandra.yaml
+sed -i "s/start_rpc:.*/start_rpc: true/g" $C/cassandra.yaml
 
 sed -i "s/authenticator:.*/authenticator: $CASSANDRA_AUTHENTICATOR/g" $C/cassandra.yaml
 sed -i "s/authorizer:.*/authorizer: $CASSANDRA_AUTHORIZER/g" $C/cassandra.yaml
@@ -47,5 +48,11 @@ fi
 touch /etc/profile.d/cassandra.sh
 echo "export CASSANDRA_HOME=$CASSANDRA_DIR" >> /etc/profile.d/cassandra.sh 
 echo 'export PATH=$PATH:$CASSANDRA_HOME/bin/:$CASSANDRA_HOME/tools/bin' >> /etc/profile.d/cassandra.sh
+
+if [ "x$CASSANDRA_DAEMON_ARGS" != "x" ];
+then
+  echo "export CASSANDRA_DAEMON_ARGS=$CASSANDRA_DAEMON_ARGS" >> /etc/profile.d/cassandra.sh
+fi
+
 echo "source /etc/profile.d/cassandra.sh" >> /etc/bash.bashrc
 

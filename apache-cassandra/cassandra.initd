@@ -13,12 +13,9 @@
 DESC="apache cassandra"
 NAME=cassandra
 DAEMON=/opt/cassandra/bin/$NAME
-DAEMON_ARGS=""
 SCRIPTNAME=/etc/init.d/$NAME
 CASSANDRA_USER=cassandra
 
-# Exit if the package is not installed
-[ -x "$DAEMON" ] || exit 0
 
 # Read configuration variable file if it is present
 source /etc/profile.d/cassandra.sh
@@ -36,26 +33,29 @@ source /lib/lsb/init-functions
 #
 do_start()
 {
-    echo -n "Starting Cassandra..."
-    ulimit -l unlimited &&
-    ulimit -n 100000 &&
-    ulimit -u 32768 &&
-    ulimit -v unlimited &&
-    sysctl -q -w vm.max_map_count=131072 &&
-    swapoff --all &&
-	# Return
+  echo -n "Starting Cassandra..."
+  ulimit -l unlimited &&
+  ulimit -n 100000 &&
+  ulimit -u 32768 &&
+  ulimit -v unlimited &&
+  sysctl -q -w vm.max_map_count=131072 &&
+  swapoff --all &&
+	# # Return
 	#   0 if daemon has been started
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
 	# start-stop-daemon --start --chuid cassandra --exec $DAEMON --test > /dev/null \
 	# 	|| return 1
-	start-stop-daemon --quiet --start --chuid cassandra --exec $DAEMON -- \
-		$DAEMON_ARGS \
-		|| return 2
+	#start-stop-daemon --quiet --start --chuid cassandra --exec $DAEMON -- \
+	#	|| return 2
+  start-stop-daemon --quiet --start --chuid cassandra --make-pidfile --pidfile /var/run/cassandra --background --startas /bin/bash -- -c "exec $DAEMON $CASSANDRA_DAEMON_ARGS" \
+                || return 2
+  #$DAEMON > /var/log/cassandra/my_out.txt 2> /var/log/cassandra/my_error.txt &&
 	# Add code here, if necessary, that waits for the process to be ready
 	# to handle requests from services started subsequently which depend
 	# on this one.  As a last resort, sleep for some time.
-    echo "Ok"
+  echo "Ok"
+  return 0
 }
 
 #

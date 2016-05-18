@@ -4,6 +4,7 @@
 Vagrant.configure(2) do |config|
 
   config.vm.box = "ubuntu/trusty64"
+  #config.vm.box = "jwd/debian-7.9.0-amd64"
 
   #spark master
   cassandra_nodes = 2
@@ -12,7 +13,7 @@ Vagrant.configure(2) do |config|
     config.vm.define "cassy-#{i}" do |c|
         c.vm.provision "shell", path: "environments/vagrant/oracle-jdk.sh"
         c.vm.provision "shell", path: "environments/vagrant/cassandra.sh", env: {'CASSANDRA_SEEDS' => '192.168.60.11'}
-  
+        #c.vm.synced_folder ".", "/vagrant", type: "virtualbox"
         c.vm.provider "virtualbox" do |vb|
           vb.memory = 2048
           vb.cpus = 2
@@ -21,9 +22,9 @@ Vagrant.configure(2) do |config|
         c.vm.hostname = "cassy#{i}"
         c.vm.network "private_network", ip: "192.168.60.1#{i}"
   
-        c.vm.network "forwarded_port", guest: 9160, host: (9260 + i - 1)
-        c.vm.network "forwarded_port", guest: 8081, host: (8180 + i - 1)
-        c.vm.network "forwarded_port", guest: 9042, host: (9140 + i - 1)
+        c.vm.network "forwarded_port", guest: 9160, host: (9260 + i)
+        c.vm.network "forwarded_port", guest: 8081, host: (8180 + i)
+        c.vm.network "forwarded_port", guest: 9042, host: (9140 + i)
     end
   end
 

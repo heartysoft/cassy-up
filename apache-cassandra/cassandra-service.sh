@@ -1,5 +1,5 @@
 
-useradd cassandra || true
+useradd -r cassandra || true
 
 chown -R cassandra /var/lib/cassandra
 chown -R cassandra /var/log/cassandra
