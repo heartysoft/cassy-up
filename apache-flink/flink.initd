@@ -14,16 +14,16 @@ else
 fi
 
 start() {
-    echo -n "Starting Flink... "
+    echo "Starting Flink... "
 
-		start-stop-daemon --start --quiet --chuid flink --exec $DAEMON $DAEMON_ARGS -- \
-		  || return 2
+		start-stop-daemon --quiet --start --chuid flink --make-pidfile --pidfile /var/run/flink --background --startas /bin/bash -- -c "exec $DAEMON $DAEMON_ARGS" \
+                || return 2
       echo "OK" &&
       return 0
 }
 
 stop() {
-	echo -n "Stopping Flink... "
+	echo "Stopping Flink... "
     $DAEMON stop
     echo "OK"
     return 0

@@ -11,7 +11,7 @@ sed -i "s/endpoint_snitch:.*/endpoint_snitch: $CASSANDRA_SNITCH/g" $C/cassandra.
 sed -i "s/listen_address:.*/listen_address: $CASSANDRA_LISTEN_ADDRESS/g" $C/cassandra.yaml
 sed -i "s/# broadcast_address:.*/broadcast_address: $CASSANDRA_BROADCAST_ADDRESS/g" $C/cassandra.yaml
 sed -i "s/rpc_address:.*/rpc_address: $CASSANDRA_RPC_ADDRESS/g" $C/cassandra.yaml
-sed -i "s/# broadcast_rpc_address:.*/broadcast_rpc_address: $CASSANDRA_BROADCAST_RPC_ADDRESS/g" $C/cassandra.yaml
+sed -i "s/.*broadcast_rpc_address:.*/broadcast_rpc_address: $CASSANDRA_BROADCAST_RPC_ADDRESS/g" $C/cassandra.yaml
 sed -i "s/start_rpc:.*/start_rpc: true/g" $C/cassandra.yaml
 
 sed -i "s/authenticator:.*/authenticator: $CASSANDRA_AUTHENTICATOR/g" $C/cassandra.yaml
