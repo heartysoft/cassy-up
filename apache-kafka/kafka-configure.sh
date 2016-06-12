@@ -14,6 +14,7 @@ sed -i "s/broker.id=0/broker.id=${KAFKA_BROKER_ID}/g" $KAFKA_DIR/config/server.p
 sed -i "s@/tmp/kafka-logs@${KAFKA_LOG_DIR}@g" $KAFKA_DIR/config/server.properties
 sed -i "s/localhost:2181/${KAFKA_ZOOKEEPER_SERVERS}/g" $KAFKA_DIR/config/server.properties
 echo 'enable.zookeeper=false' >> $KAFKA_DIR/config/server.properties
+echo "delete.topic.enable=${KAFKA_DELETE_TOPIC_ENABLE}" >> $KAFKA_DIR/config/server.properties
 echo "advertised.host.name=${KAFKA_ADVERTISED_HOST_NAME}" >> $KAFKA_DIR/config/server.properties
 
 ln -s  $KAFKA_LOG4J_DIR $KAFKA_DIR/logs
