@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 useradd -r cassandra || true
 
