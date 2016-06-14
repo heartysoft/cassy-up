@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # downloads and extracts cassandra tarball
 # if cassandra-$CASSANDRA_VERSION is not present
 
@@ -6,7 +7,7 @@ mkdir -p $CASSANDRA_DOWNLOAD_DIR
 mkdir -p $CASSANDRA_INSTALL_DIR
 
 if [ ! -f "$CASSANDRA_DOWNLOAD_DIR/$CASSANDRA_TAR" ]; then
-    (cd $CASSANDRA_DOWNLOAD_DIR && curl -O $CASSANDRA_URL)
+    (cd $CASSANDRA_DOWNLOAD_DIR && wget $CASSANDRA_URL)
 fi
 
 if [ ! "$(ls -A $CASSANDRA_INSTALL_DIR)" ]; then

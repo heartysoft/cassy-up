@@ -10,6 +10,8 @@ if [ "x$CASSANDRA_DC_SUFFIX" == "x" ]; then export CASSANDRA_DC_SUFFIX="_dev_cas
 
 if [ "x$CASSANDRA_DOWNLOAD_DIR" == "x" ]; then export CASSANDRA_DOWNLOAD_DIR="/vagrant/files/downloads/apache-cassandra/"; fi
 
+chmod a+x $SCRIPT_ROOT/apache-cassandra/main.sh
+chmod a+x $SCRIPT_ROOT/apache-cassandra/cassandra.initd
 
 (cd $SCRIPT_ROOT/apache-cassandra && ./main.sh)
 

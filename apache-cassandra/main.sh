@@ -2,9 +2,9 @@
 
 source ./cassandra-params.sh
 
-./cassandra-get-files.sh
-./cassandra-configure.sh
-./cassandra-service.sh
+source ./cassandra-get-files.sh
+source ./cassandra-configure.sh
+source ./cassandra-service.sh
 
 service cassandra start
 
