@@ -1,0 +1,90 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Short-Description: spark_master
+# Description: spark_master
+### END INIT INFO
+
+# Author: Ashic Mahtab <ashic@heartysoft.com>
+#
+# Do NOT "set -e"
+
+# PATH should only include /usr/* if it runs after the mountnfs.sh script
+DESC="spark master"
+NAME=spark
+DAEMON=/opt/spark/sbin/start-master.sh
+SDAEMON=/opt/spark/sbin/stop-master.sh
+SPARK_USER=spark
+export SPARK_HOME=/opt/spark
+
+
+# Read configuration variable file if it is present
+#source /etc/profile.d/cassandra.sh
+
+# Load the VERBOSE setting and other rcS variables
+source /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.2-14) to ensure that this file is present
+# and status_of_proc is working.
+source /lib/lsb/init-functions
+
+#
+# Function that starts the daemon/service
+#
+start()
+{
+  echo -n "Starting Spark..."
+  start-stop-daemon --quiet --start --chuid spark --make-pidfile --pidfile /var/run/spark --background --startas /bin/bash -- -c "exec $DAEMON" \
+                || return 2
+  echo "Ok"
+  return 0
+}
+
+#
+# Function that stops the daemon/service
+#
+stop()
+{
+    echo -n "Stopping Spark... "
+    exec $SDAEMON &&
+    echo "OK"
+    return 0
+}
+
+status() {
+ if ps auwx | grep "[j]ava" | grep "[s]park" > /dev/null
+  then
+    echo "Spark Master is running."
+    exit 0
+  else
+    echo "Spark Master is stopped."
+    exit 1
+  fi
+}
+
+
+case "$1" in
+  status)
+    status
+  ;;
+  start)
+    echo "Starting daemon: "$NAME
+    start
+  ;;
+  stop)
+    echo "Stopping daemon: "$NAME
+    stop
+  ;;
+  restart)
+    echo "Restarting daemon: "$NAME
+    stop
+    start
+  ;;
+
+  *)
+  echo "Usage: "$1" {status|start|stop|restart}"
+  exit 1
+esac
+
+exit 0

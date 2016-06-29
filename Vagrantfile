@@ -35,29 +35,29 @@ Vagrant.configure(2) do |config|
   #spark master
   cassandra_nodes = 2
   #cassandra + spark workers
-  (1..cassandra_nodes).each do |i|
-    config.vm.define "cassy-#{i}" do |c|
-        c.vm.provision "shell", path: "environments/vagrant/oracle-jdk.sh"
-        c.vm.provision "shell", path: "environments/vagrant/cassandra.sh", env: {'CASSANDRA_SEEDS' => '192.168.60.11'}
-        #c.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-        c.vm.provider "virtualbox" do |vb|
-          vb.memory = 2048
-          vb.cpus = 2
-        end
+  # (1..cassandra_nodes).each do |i|
+  #   config.vm.define "cassy-#{i}" do |c|
+  #       c.vm.provision "shell", path: "environments/vagrant/oracle-jdk.sh"
+  #       c.vm.provision "shell", path: "environments/vagrant/cassandra.sh", env: {'CASSANDRA_SEEDS' => '192.168.60.11'}
+  #       #c.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+  #       c.vm.provider "virtualbox" do |vb|
+  #         vb.memory = 2048
+  #         vb.cpus = 2
+  #       end
   
-        c.vm.hostname = "cassy#{i}"
-        c.vm.network "private_network", ip: "192.168.60.1#{i}"
+  #       c.vm.hostname = "cassy#{i}"
+  #       c.vm.network "private_network", ip: "192.168.60.1#{i}"
   
-        c.vm.network "forwarded_port", guest: 9160, host: (9260 + i)
-        c.vm.network "forwarded_port", guest: 8081, host: (8180 + i)
-        c.vm.network "forwarded_port", guest: 9042, host: (9140 + i)
-    end
-  end
+  #       c.vm.network "forwarded_port", guest: 9160, host: (9260 + i)
+  #       c.vm.network "forwarded_port", guest: 8081, host: (8180 + i)
+  #       c.vm.network "forwarded_port", guest: 9042, host: (9140 + i)
+  #   end
+  # end
 
   #zookeeper + kafka (3 nodes)
-  # zookeeper_nodes = 3
-  # zookeeper_base_ip = "192.168.70.1"
-  # zookeeper_host_ips = (1..zookeeper_nodes).map {|i| "#{zookeeper_base_ip}#{i}"}.join(',')
+  zookeeper_nodes = 3
+  zookeeper_base_ip = "192.168.70.1"
+  zookeeper_host_ips = (1..zookeeper_nodes).map {|i| "#{zookeeper_base_ip}#{i}"}.join(',')
   
   
   # (1..zookeeper_nodes).each do |i|
@@ -79,9 +79,9 @@ Vagrant.configure(2) do |config|
   # end
 
 
-  # kafka_nodes = 3
-  # kafka_base_ip = "192.168.70.2"
-  # kafka_host_ips = (1..kafka_nodes).map {|i| "#{kafka_base_ip}#{i}"}.join(',')
+  kafka_nodes = 3
+  kafka_base_ip = "192.168.70.2"
+  kafka_host_ips = (1..kafka_nodes).map {|i| "#{kafka_base_ip}#{i}"}.join(',')
   
 
   # (1..kafka_nodes).each do |i|
@@ -100,4 +100,23 @@ Vagrant.configure(2) do |config|
   #   end
   # end
   
+
+  spark_base_ip = "192.168.80.2"
+
+  config.vm.define "spark-master" do |c|
+    c.vm.provision "shell", path: "environments/vagrant/oracle-jdk.sh"
+    c.vm.provision "shell", path: "environments/vagrant/spark.sh", env: { 'SPARK_MODE' => 'master' }
+  #       c.vm.provision "shell", path: "environments/vagrant/kafka.sh", env: {'KAFKA_ZOOKEEPER_SERVERS' => zookeeper_host_ips, 'KAFKA_BROKER_ID' => i}
+
+    c.vm.provider "virtualbox" do |vb|
+        vb.memory = 1024
+        vb.cpus = 2
+    end
+
+    c.vm.hostname = "spark-master"
+    c.vm.network "private_network", ip: "#{spark_base_ip}1"
+    c.vm.network "forwarded_port", guest: 8080, host: 9090
+    c.vm.network "forwarded_port", guest: 7077, host: 7077
+  end
+
 end
