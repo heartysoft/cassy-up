@@ -18,3 +18,5 @@ if [ ! "$(ls -A $SPARK_INSTALL_DIR)" ]; then
 fi
 
 ln -sfn $SPARK_INSTALL_DIR $SPARK_DIR || true
+
+mkdir -p $SPARK_DIR/work

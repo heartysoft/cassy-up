@@ -102,10 +102,12 @@ Vagrant.configure(2) do |config|
   
 
   spark_base_ip = "192.168.80.2"
+  spark_master_ip = "192.168.80.21"
+  spark_worker_nodes = 2
 
   config.vm.define "spark-master" do |c|
     c.vm.provision "shell", path: "environments/vagrant/oracle-jdk.sh"
-    c.vm.provision "shell", path: "environments/vagrant/spark.sh", env: { 'SPARK_MODE' => 'master' }
+    c.vm.provision "shell", path: "environments/vagrant/spark.sh", env: { 'SPARK_MODE' => 'master', 'SPARK_MASTER_IP' => spark_master_ip }
   #       c.vm.provision "shell", path: "environments/vagrant/kafka.sh", env: {'KAFKA_ZOOKEEPER_SERVERS' => zookeeper_host_ips, 'KAFKA_BROKER_ID' => i}
 
     c.vm.provider "virtualbox" do |vb|
@@ -114,9 +116,26 @@ Vagrant.configure(2) do |config|
     end
 
     c.vm.hostname = "spark-master"
-    c.vm.network "private_network", ip: "#{spark_base_ip}1"
+    c.vm.network "private_network", ip: spark_master_ip
     c.vm.network "forwarded_port", guest: 8080, host: 9090
     c.vm.network "forwarded_port", guest: 7077, host: 7077
+  end
+
+  (1..spark_worker_nodes).each do |i|
+    config.vm.define "spark-#{i}" do |c|
+      c.vm.provision "shell", path: "environments/vagrant/oracle-jdk.sh"
+      c.vm.provision "shell", path: "environments/vagrant/spark.sh", env: { 'SPARK_MODE' => 'worker', 'SPARK_MASTER_IP' => spark_master_ip }
+
+      c.vm.provider "virtualbox" do |vb|
+          vb.memory = 1024
+          vb.cpus = 2
+      end
+
+      c.vm.hostname = "spark-#{i}"
+      c.vm.network "private_network", ip: "#{spark_base_ip}#{i+1}"
+      c.vm.network "forwarded_port", guest: 8081, host: (9090+i)
+      #c.vm.network "forwarded_port", guest: 7077, host: 7077
+    end
   end
 
 end
