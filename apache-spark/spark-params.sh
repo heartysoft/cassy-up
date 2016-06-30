@@ -14,10 +14,6 @@ if [ "x$SPARK_URL" == "x" ]; then export SPARK_URL=https://www.apache.org/dist/s
 if [ "x$SPARK_DOWNLOAD_DIR" == "x" ]; then export SPARK_DOWNLOAD_DIR=/usr/local/downloads/spark/spark-$SPARK_VERSION; fi
 if [ "x$SPARK_ROOT_DIR" == "x" ]; then export SPARK_ROOT_DIR=/opt; fi
 
-
-if [ "x$SPARK_MAX_WORKER_CORES" == "x" ]; then export SPARK_MAX_WORKER_CORES=2; fi
-if [ "x$SPARK_MAX_WORKER_RAM" == "x" ]; then export SPARK_MAX_WORKER_RAM='2GB'; fi
-
 if [ "x$SPARK_LOG_DIR" == "x" ]; then export SPARK_LOG_DIR='/var/log/spark'; fi
 
 
