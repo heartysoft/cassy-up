@@ -8,7 +8,10 @@ if [ "x$SPARK_MASTER_IP" == "x" ]; then echo "SPARK_MASTER_IP is required"; exit
 
 if [ "x$SPARK_MASTER" == "x" ]; then export SPARK_MASTER="spark://$SPARK_MASTER_IP:7077"; fi
 
-export SPARK_TAR=spark-$SPARK_VERSION-bin-hadoop1-scala2.11.tgz
+if [ "x$SPARK_HADOOP_VERSION" == "x" ]; then export SPARK_HADOOP_VERSION="1"; fi
+if [ "x$SPARK_SCALA_VERSION" == "x" ]; then export SPARK_SCALA_VERSION="2.11"; fi
+
+export SPARK_TAR=spark-"$SPARK_VERSION-bin-hadoop$SPARK_HADOOP_VERSION-scala$SPARK_SCALA_VERSION.tgz"
 
 if [ "x$SPARK_URL" == "x" ]; then export SPARK_URL=https://www.apache.org/dist/spark/spark-$SPARK_VERSION/$SPARK_TAR; fi
 if [ "x$SPARK_DOWNLOAD_DIR" == "x" ]; then export SPARK_DOWNLOAD_DIR=/usr/local/downloads/spark/spark-$SPARK_VERSION; fi

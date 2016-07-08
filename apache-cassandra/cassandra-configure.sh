@@ -45,6 +45,8 @@ then
         sed -i "s/#dc_suffix=.*/dc_suffix=$CASSANDRA_DC_SUFFIX/g" $C/cassandra-rackdc.properties
 fi
 
+# /etc/profile.d/cassandra.sh
+
 touch /etc/profile.d/cassandra.sh
 echo "export CASSANDRA_HOME=$CASSANDRA_DIR" >> /etc/profile.d/cassandra.sh 
 echo 'export PATH=$PATH:$CASSANDRA_HOME/bin/:$CASSANDRA_HOME/tools/bin' >> /etc/profile.d/cassandra.sh
@@ -56,3 +58,8 @@ fi
 
 echo "source /etc/profile.d/cassandra.sh" >> /etc/bash.bashrc
 
+# cassandra-env.sh
+
+if [ "x$CASSANDRA_CONSISTENT_RANGEMOVEMENT" == "x0" ]; then
+  echo 'JVM_OPTS="$JVM_OPTS -Dcassandra.consistent.rangemovement=false"' >> $C/cassandra-env.sh
+fi
