@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 export C=$CASSANDRA_DIR/conf
 
@@ -32,7 +33,7 @@ mkdir -p /var/log/cassandra
 
 # cassandra-rackdc.properties
 
-if [ "x$CASSANDRA_SNITCH" == "xGossipingPropertyFileSnitch" ] 
+if [ "x$CASSANDRA_SNITCH" == "xGossipingPropertyFileSnitch" ]
 then
         sed -i "s/dc=.*/dc=$CASSANDRA_DC/g" $C/cassandra-rackdc.properties
         sed -i "s/rack=.*/rack=$CASSANDRA_RACK/g" $C/cassandra-rackdc.properties
@@ -48,7 +49,7 @@ fi
 # /etc/profile.d/cassandra.sh
 
 touch /etc/profile.d/cassandra.sh
-echo "export CASSANDRA_HOME=$CASSANDRA_DIR" >> /etc/profile.d/cassandra.sh 
+echo "export CASSANDRA_HOME=$CASSANDRA_DIR" >> /etc/profile.d/cassandra.sh
 echo 'export PATH=$PATH:$CASSANDRA_HOME/bin/:$CASSANDRA_HOME/tools/bin' >> /etc/profile.d/cassandra.sh
 
 if [ "x$CASSANDRA_DAEMON_ARGS" != "x" ];
