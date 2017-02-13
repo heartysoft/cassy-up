@@ -6,7 +6,7 @@ if [ "x$CASSANDRA_BROADCAST_ADDRESS" == "x" ]; then export CASSANDRA_BROADCAST_A
 if [ "x$CASSANDRA_RPC_ADDRESS" == "x" ]; then export CASSANDRA_RPC_ADDRESS=0.0.0.0; fi
 if [ "x$CASSANDRA_BROADCAST_RPC_ADDRESS" == "x" ]; then export CASSANDRA_BROADCAST_RPC_ADDRESS=$CASSANDRA_BROADCAST_ADDRESS; fi
 
-if [ "x$CASSANDRA_VERSION" == "x" ]; then export CASSANDRA_VERSION=3.7; fi
+if [ "x$CASSANDRA_VERSION" == "x" ]; then export CASSANDRA_VERSION=3.9; fi
 export CASSANDRA_TAR=apache-cassandra-$CASSANDRA_VERSION-bin.tar.gz
 if [ "x$CASSANDRA_URL" == "x" ]; then export CASSANDRA_URL=https://www.apache.org/dist/cassandra/$CASSANDRA_VERSION/$CASSANDRA_TAR; fi
 if [ "x$CASSANDRA_DOWNLOAD_DIR" == "x" ]; then export CASSANDRA_DOWNLOAD_DIR=/usr/local/downloads/cassandra/cassandra-$CASSANDRA_VERSION; fi
