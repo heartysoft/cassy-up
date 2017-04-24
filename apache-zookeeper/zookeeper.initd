@@ -1,3 +1,4 @@
+#! /bin/bash
 
 # description: Starts and stops zookeeper
 # update deamon path to point to the zookeeper executable
