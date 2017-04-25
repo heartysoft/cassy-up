@@ -2,3 +2,9 @@
 *.swp
 
 .idea/
+
+providers.tf
+
+*.tfstate
+*.tfstate.backup
+*.tfvars
