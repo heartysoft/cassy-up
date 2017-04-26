@@ -4,8 +4,8 @@ resource "aws_instance" "kafka" {
   key_name = "datalake"
   instance_type = "${var.instance_type}"
   iam_instance_profile = "${var.iam_instance_profile}"
-  subnet_id = "${element(split(",", var.subnet_ids), count.index % length(split(",", var.subnet_ids)))}"
-  vpc_security_group_ids = ["${split(",", var.sg_ids)}"]
+  subnet_id = "${element(var.subnet_ids, count.index % length(var.subnet_ids))}"
+  vpc_security_group_ids = [ "${var.sg_ids}" ]
   tags = {
     Name = "${format("%s-%d", var.tag_name, count.index + 1)}"
   }
@@ -81,7 +81,7 @@ resource "null_resource" "provision-kafka" {
   provisioner "remote-exec" {
     inline = [
       "echo 'export KAFKA_BROKER_ID=${count.index+1}' >> /tmp/cassy-up/kafka_params.sh",
-      "echo 'export KAFKA_ZOOKEEPER_SERVERS=${var.zk_ips}' >> /tmp/cassy-up/kafka_params.sh",
+      "echo 'export KAFKA_ZOOKEEPER_SERVERS=${join(",", var.zk_ips)}' >> /tmp/cassy-up/kafka_params.sh",
       "echo 'export KAFKA_ADVERTISED_HOST_NAME=${element(aws_instance.kafka.*.private_ip, count.index)}' >> /tmp/cassy-up/kafka_params.sh",
       "chmod -R a+x /tmp/cassy-up/*",
       "sudo /tmp/cassy-up/oracle-jdk.sh",
