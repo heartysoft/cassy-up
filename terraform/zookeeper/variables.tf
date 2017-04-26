@@ -1,14 +1,14 @@
-variable zookeeper_rev {}
+variable rev {}
 
-variable zookeeper_count {}
-variable zookeeper_tag_name {}
+variable count {}
+variable tag_name {}
 
-variable zookeeper_ami_id {}
-variable zookeeper_instance_type {}
-variable zookeeper_iam_instance_profile {}
-variable zookeeper_subnet_ids {}
-variable zookeeper_sg_ids {}
+variable ami_id {}
+variable instance_type {}
+variable iam_instance_profile {}
+variable subnet_ids {}
+variable sg_ids {}
 
-variable zookeeper_provisioning_scripts {}
-variable zookeeper_ssh_user {}
-variable zookeeper_ssh_identity_file {}
+variable provisioning_scripts {}
+variable ssh_user {}
+variable ssh_identity_file {}

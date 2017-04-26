@@ -1,19 +1,19 @@
-variable kafka_rev {}
+variable rev {}
 
-variable kafka_count {}
-variable kafka_tag_name {}
+variable count {}
+variable tag_name {}
 
-variable kafka_ebs_size_per_node {}
-variable kafka_ebs_type {}
+variable ebs_size_per_node {}
+variable ebs_type {}
 
-variable kafka_ami_id {}
-variable kafka_iam_instance_profile {}
-variable kafka_instance_type {}
-variable kafka_sg_ids {}
-variable kafka_subnet_ids {}
+variable ami_id {}
+variable iam_instance_profile {}
+variable instance_type {}
+variable sg_ids {}
+variable subnet_ids {}
 
-variable kafka_ssh_user {}
-variable kafka_ssh_identity_file {}
+variable ssh_user {}
+variable ssh_identity_file {}
 
-variable kafka_provisioning_scripts {}
-variable kafka_zk_ips {}
+variable provisioning_scripts {}
+variable zk_ips {}
