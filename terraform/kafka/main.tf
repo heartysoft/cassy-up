@@ -1,24 +1,24 @@
 resource "aws_instance" "kafka" {
-  count = "${var.kafka_count}"
-  ami = "${var.kafka_ami_id}"
+  count = "${var.count}"
+  ami = "${var.ami_id}"
   key_name = "datalake"
-  instance_type = "${var.kafka_instance_type}"
-  iam_instance_profile = "${var.kafka_iam_instance_profile}"
-  subnet_id = "${element(split(",", var.kafka_subnet_ids), count.index % length(split(",", var.kafka_subnet_ids)))}"
-  vpc_security_group_ids = ["${split(",", var.kafka_sg_ids)}"]
+  instance_type = "${var.instance_type}"
+  iam_instance_profile = "${var.iam_instance_profile}"
+  subnet_id = "${element(split(",", var.subnet_ids), count.index % length(split(",", var.subnet_ids)))}"
+  vpc_security_group_ids = ["${split(",", var.sg_ids)}"]
   tags = {
-    Name = "${format("%s-%d", var.kafka_tag_name, count.index + 1)}"
+    Name = "${format("%s-%d", var.tag_name, count.index + 1)}"
   }
 }
 
 resource "null_resource" "provision-kafka-ebs" {
-  count = "${var.kafka_count}"
+  count = "${var.count}"
 
   connection {
-    user = "${var.kafka_ssh_user}"
+    user = "${var.ssh_user}"
     host = "${element(aws_instance.kafka.*.private_ip, count.index)}"
     agent = true
-    private_key = "${file("${var.kafka_ssh_identity_file}")}"
+    private_key = "${file("${var.ssh_identity_file}")}"
   }
 
   provisioner "remote-exec" {
@@ -33,19 +33,19 @@ resource "null_resource" "provision-kafka-ebs" {
 }
 
 resource "null_resource" "provision-kafka" {
-  count = "${var.kafka_count}"
+  count = "${var.count}"
   
   depends_on = ["null_resource.provision-kafka-ebs"]
 
   triggers {
-    revision = "${var.kafka_rev}"
+    revision = "${var.rev}"
   }
 
   connection {
-    user = "${var.kafka_ssh_user}"
+    user = "${var.ssh_user}"
     host = "${element(aws_instance.kafka.*.private_ip, count.index)}"
     agent = true
-    private_key = "${file("${var.kafka_ssh_identity_file}")}"
+    private_key = "${file("${var.ssh_identity_file}")}"
   }
 
   provisioner "remote-exec" {
@@ -59,29 +59,29 @@ resource "null_resource" "provision-kafka" {
   }
 
   provisioner "file" {
-    source = "${var.kafka_provisioning_scripts}/oracle-jdk"
+    source = "${var.provisioning_scripts}/oracle-jdk"
     destination = "/tmp/cassy-up"
   }
 
   provisioner "file" {
-    source = "${var.kafka_provisioning_scripts}/environments/aws/oracle-jdk.sh"
+    source = "${var.provisioning_scripts}/environments/aws/oracle-jdk.sh"
     destination = "/tmp/cassy-up/oracle-jdk.sh"
   }
 
   provisioner "file" {
-    source = "${var.kafka_provisioning_scripts}/apache-kafka"
+    source = "${var.provisioning_scripts}/apache-kafka"
     destination = "/tmp/cassy-up"
   }
 
   provisioner "file" {
-    source = "${var.kafka_provisioning_scripts}/environments/aws/kafka.sh"
+    source = "${var.provisioning_scripts}/environments/aws/kafka.sh"
     destination = "/tmp/cassy-up/kafka.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
       "echo 'export KAFKA_BROKER_ID=${count.index+1}' >> /tmp/cassy-up/kafka_params.sh",
-      "echo 'export KAFKA_ZOOKEEPER_SERVERS=${var.kafka_zk_ips}' >> /tmp/cassy-up/kafka_params.sh",
+      "echo 'export KAFKA_ZOOKEEPER_SERVERS=${var.zk_ips}' >> /tmp/cassy-up/kafka_params.sh",
       "echo 'export KAFKA_ADVERTISED_HOST_NAME=${element(aws_instance.kafka.*.private_ip, count.index)}' >> /tmp/cassy-up/kafka_params.sh",
       "chmod -R a+x /tmp/cassy-up/*",
       "sudo /tmp/cassy-up/oracle-jdk.sh",
@@ -95,7 +95,7 @@ resource "null_resource" "provision-kafka" {
       "#!/bin/bash",
       "source /tmp/cassy-up/kafka_params.sh",
       "source /tmp/cassy-up/apache-kafka/kafka-params.sh",
-      "echo \"revision: ${var.kafka_rev}\" | sudo tee $KAFKA_DIR/install.yaml",
+      "echo \"revision: ${var.rev}\" | sudo tee $KAFKA_DIR/install.yaml",
       "echo \"scala:\" | sudo tee --append $KAFKA_DIR/install.yaml",
       "echo \"  version: $SCALA_VERSION\" | sudo tee --append $KAFKA_DIR/install.yaml",
       "echo \"kafka:\" | sudo tee --append $KAFKA_DIR/install.yaml",
