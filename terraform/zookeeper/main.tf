@@ -4,8 +4,8 @@ resource "aws_instance" "zookeeper" {
     key_name = "datalake"
     instance_type = "${var.instance_type}"
     iam_instance_profile = "${var.iam_instance_profile}"
-    subnet_id = "${element(split(",", var.subnet_ids), count.index % length(split(",", var.subnet_ids)))}"
-    vpc_security_group_ids = ["${split(",", var.sg_ids)}"]
+    subnet_id = "${element(var.subnet_ids, count.index % length(var.subnet_ids))}"
+    vpc_security_group_ids = [ "${var.sg_ids}" ]
     tags = {
       Name = "${format("%s-%d", var.tag_name, count.index + 1)}"
     }
