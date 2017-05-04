@@ -14,6 +14,8 @@ resource "aws_instance" "kafka" {
 resource "null_resource" "provision-kafka-ebs" {
   count = "${var.count}"
 
+  depends_on = [ "aws_volume_attachment.kafka-ebs-attach" ]
+
   connection {
     user = "${var.ssh_user}"
     host = "${element(aws_instance.kafka.*.private_ip, count.index)}"
@@ -27,7 +29,7 @@ resource "null_resource" "provision-kafka-ebs" {
       "sudo apt-get install xfsprogs -y",
       "sudo mkfs.xfs -f -s size=4096 -d sunit=8 -d swidth=256 /dev/xvdh",
       "sudo mount -t xfs /dev/xvdh /var/lib/kafka",
-      "echo '/dev/xvdh /var/lib/kafka  xfs defaults    0   0' | sudo tee --append /etc/fstab"
+      "printf '/dev/xvdh\t/var/lib/kafka\txfs\tdefaults\t0 0' | sudo tee --append /etc/fstab"
     ]
   }
 }
@@ -35,7 +37,7 @@ resource "null_resource" "provision-kafka-ebs" {
 resource "null_resource" "provision-kafka" {
   count = "${var.count}"
   
-  depends_on = ["null_resource.provision-kafka-ebs"]
+  depends_on = [ "null_resource.provision-kafka-ebs" ]
 
   triggers {
     revision = "${var.rev}"
