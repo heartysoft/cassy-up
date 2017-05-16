@@ -3,7 +3,6 @@ resource "aws_instance" "dse-cassandra" {
   ami = "${var.ami_id}"
   key_name = "datalake"
   instance_type = "${var.instance_type}"
-  #iam_instance_profile = "${var.iam_instance_profile}"
   availability_zone = "${var.availability_zones[count.index % length(var.availability_zones)]}"
   subnet_id = "${var.subnet_ids[var.availability_zones[count.index % length(var.availability_zones)]]}"
   vpc_security_group_ids = [ "${var.sg_ids}" ]
@@ -54,6 +53,7 @@ resource "null_resource" "provision-dse-cassandra" {
 
   triggers {
     revision = "${var.rev}"
+    datastax-version = "${var.datastax_version}"
   }
 
   connection {

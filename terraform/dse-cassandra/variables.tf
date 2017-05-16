@@ -17,7 +17,6 @@ variable commitlog_ebs_type {
 }
 
 variable ami_id {}
-#variable iam_instance_profile {}
 variable instance_type {}
 variable sg_ids {
 	type = "list"
